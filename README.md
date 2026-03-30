@@ -99,7 +99,6 @@ Follow these steps to run the application locally on your machine.
 ## 🛠️ Built With
 - [Next.js App Router](https://nextjs.org/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [Lucide Icons](https://lucide.dev/)
+- [21stdev ](https://21st.dev/)
 - [FastAPI](https://fastapi.tiangolo.com/)
-- [Google Generative AI SDK](https://github.com/google/generative-ai-python)
+
