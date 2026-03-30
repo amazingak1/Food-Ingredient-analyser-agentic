@@ -1,4 +1,5 @@
 import os
+print("--- [STARTING FASTAPI BACKEND] ---")
 import io
 import json
 from fastapi import FastAPI, UploadFile, File, HTTPException

@@ -3,4 +3,5 @@ uvicorn[standard]
 python-dotenv
 pillow
 google-generativeai
+python-multipart
 # optional: any other packages you explicitly need
