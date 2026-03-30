@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { UploadCloud, Camera, CheckCircle2, AlertTriangle, Salad, Pill, Activity, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TextParticle } from "@/components/ui/text-particle";
+import { ParticleTextEffect } from "@/components/ui/interactive-text-particle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Home() {
@@ -90,13 +90,12 @@ export default function Home() {
           className="text-center space-y-4 mb-12"
         >
           <h1 className="sr-only">Know what you eat.</h1>
-          <div className="h-24 md:h-32 w-full mx-auto max-w-3xl cursor-pointer" title="Hover over me!">
-            <TextParticle
+          <div className="h-24 md:h-32 w-full mx-auto max-w-4xl cursor-pointer relative" title="Hover over me!">
+            <ParticleTextEffect
               text="Know what you eat."
-              fontSize={70}
-              particleColor="#059669" /* emerald-600 */
-              particleSize={2}
-              particleDensity={5}
+              className=""
+              colors={['10b981', '34d399', '059669', '047857']}
+              particleDensity={3}
             />
           </div>
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto -mt-4">
