@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { UploadCloud, Camera, CheckCircle2, AlertTriangle, Salad, Pill, Activity, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TextParticle } from "@/components/ui/text-particle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
@@ -41,7 +42,8 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/analyze-ingredients", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/analyze-ingredients`, {
         method: "POST",
         body: formData,
       });
@@ -60,22 +62,23 @@ export default function Home() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-500";
-    if (score >= 50) return "text-amber-500";
-    return "text-rose-500";
+    if (score >= 80) return "text-emerald-500 dark:text-emerald-400";
+    if (score >= 50) return "text-amber-500 dark:text-amber-400";
+    return "text-rose-500 dark:text-rose-400";
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-200">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-emerald-200 dark:selection:bg-emerald-800 transition-colors duration-300">
       {/* Header */}
-      <header className="fixed top-0 w-full backdrop-blur-md bg-white/70 border-b border-white/20 z-50 shadow-sm">
+      <header className="fixed top-0 w-full backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-white/20 dark:border-slate-800/50 z-50 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Salad className="w-8 h-8 text-emerald-600" />
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-800">
+            <Salad className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-800 dark:from-emerald-400 dark:to-teal-500">
               HealthScan
             </span>
           </div>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -96,7 +99,7 @@ export default function Home() {
               particleDensity={5}
             />
           </div>
-          <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto -mt-4">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto -mt-4">
             Upload a photo of an ingredient label. Our AI instantly analyzes it for healthy nutrients, harsh additives, and hidden allergens.
           </p>
         </motion.div>
@@ -109,16 +112,16 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative max-w-2xl mx-auto rounded-3xl border-2 border-dashed border-slate-300 bg-white shadow-xl shadow-emerald-900/5 overflow-hidden transition-all hover:border-emerald-500 hover:shadow-emerald-900/10 cursor-pointer"
+              className="relative max-w-2xl mx-auto rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl shadow-emerald-900/5 dark:shadow-none overflow-hidden transition-all hover:border-emerald-500 hover:shadow-emerald-900/10 cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
               <div className="px-8 py-16 flex flex-col items-center justify-center text-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center">
-                  <UploadCloud className="w-10 h-10 text-emerald-600" />
+                <div className="w-20 h-20 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center">
+                  <UploadCloud className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold">Upload your label</h3>
-                  <p className="text-slate-500 mt-2">Click or drag an image here. JPG, PNG supported.</p>
+                  <h3 className="text-xl font-semibold dark:text-slate-200">Upload your label</h3>
+                  <p className="text-slate-500 dark:text-slate-400 mt-2">Click or drag an image here. JPG, PNG supported.</p>
                 </div>
               </div>
               <input 
@@ -136,7 +139,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="max-w-2xl mx-auto space-y-6"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white aspect-[4/3] flex items-center justify-center">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-slate-900 aspect-[4/3] flex items-center justify-center">
                 <img src={previewUrl} alt="Preview" className="object-contain w-full h-full" />
                 <button 
                   onClick={clearSelection}
@@ -151,7 +154,7 @@ export default function Home() {
                   <button 
                     onClick={analyzeImage}
                     disabled={loading}
-                    className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-slate-900 rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
+                    className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-slate-900 dark:bg-slate-800 rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
                   >
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="relative flex items-center gap-2">
@@ -179,7 +182,7 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 max-w-2xl mx-auto p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-start gap-3"
+            className="mt-8 max-w-2xl mx-auto p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/50 text-rose-600 dark:text-rose-400 flex items-start gap-3"
           >
             <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
             <p>{error}</p>
@@ -194,20 +197,20 @@ export default function Home() {
             className="mt-12 space-y-8"
           >
             {/* Score Banner */}
-            <div className="bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 flex flex-col md:flex-row items-center gap-8 border border-white/40 max-w-4xl mx-auto relative overflow-hidden">
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none flex flex-col md:flex-row items-center gap-8 border border-white/40 dark:border-slate-800 max-w-4xl mx-auto relative overflow-hidden">
+              <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-100 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
               
               <div className="shrink-0 text-center">
                 <div className={`text-6xl font-black ${getScoreColor(result.health_score)} tracking-tighter`}>
                   {result.health_score}
-                  <span className="text-2xl text-slate-400 font-medium ml-1">/100</span>
+                  <span className="text-2xl text-slate-400 dark:text-slate-500 font-medium ml-1">/100</span>
                 </div>
-                <div className="text-sm font-semibold uppercase tracking-wider text-slate-500 mt-2">Health Score</div>
+                <div className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2">Health Score</div>
               </div>
               
               <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-2">Verdict</h3>
-                <p className="text-slate-600 text-lg leading-relaxed">{result.explanation}</p>
+                <h3 className="text-2xl font-bold mb-2 dark:text-slate-100">Verdict</h3>
+                <p className="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">{result.explanation}</p>
               </div>
             </div>
 
@@ -215,78 +218,78 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               
               {/* Healthy */}
-              <div className="bg-white rounded-3xl p-6 shadow-lg border-l-4 border-emerald-500">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-emerald-500">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
+                  <div className="p-2 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900">Good Ingredients</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Good Ingredients</h4>
                 </div>
                 {result.healthy_ingredients?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {result.healthy_ingredients.map((item: string, i: number) => (
-                      <span key={i} className="px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-sm font-medium border border-emerald-100 shadow-sm">{item}</span>
+                      <span key={i} className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-sm font-medium border border-emerald-100 dark:border-emerald-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-500 italic text-sm">None detected.</p>
+                  <p className="text-slate-500 dark:text-slate-400 italic text-sm">None detected.</p>
                 )}
               </div>
 
               {/* Unhealthy */}
-              <div className="bg-white rounded-3xl p-6 shadow-lg border-l-4 border-rose-500">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-rose-500">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="p-2 bg-rose-100 text-rose-600 rounded-lg">
+                  <div className="p-2 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-lg">
                     <AlertTriangle className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900">Unhealthy Ingredients</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Unhealthy Ingredients</h4>
                 </div>
                 {result.unhealthy_ingredients?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {result.unhealthy_ingredients.map((item: string, i: number) => (
-                      <span key={i} className="px-3 py-1 bg-rose-50 text-rose-800 rounded-full text-sm font-medium border border-rose-100 shadow-sm">{item}</span>
+                      <span key={i} className="px-3 py-1 bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-300 rounded-full text-sm font-medium border border-rose-100 dark:border-rose-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-500 italic text-sm">None detected. Great!</p>
+                  <p className="text-slate-500 dark:text-slate-400 italic text-sm">None detected. Great!</p>
                 )}
               </div>
 
               {/* Additives */}
-              <div className="bg-white rounded-3xl p-6 shadow-lg border-l-4 border-amber-500">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-amber-500">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-lg">
                     <Pill className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900">Additives & Colors</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Additives & Colors</h4>
                 </div>
                 {result.food_colorings_additives?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {result.food_colorings_additives.map((item: string, i: number) => (
-                      <span key={i} className="px-3 py-1 bg-amber-50 text-amber-800 rounded-full text-sm font-medium border border-amber-100 shadow-sm">{item}</span>
+                      <span key={i} className="px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-full text-sm font-medium border border-amber-100 dark:border-amber-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-500 italic text-sm">No harmful additives found.</p>
+                  <p className="text-slate-500 dark:text-slate-400 italic text-sm">No harmful additives found.</p>
                 )}
               </div>
 
               {/* Allergens */}
-              <div className="bg-white rounded-3xl p-6 shadow-lg border-l-4 border-orange-500">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-orange-500">
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                  <div className="p-2 bg-orange-100 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 rounded-lg">
                     <Salad className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900">Allergens</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Allergens</h4>
                 </div>
                 {result.allergens?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {result.allergens.map((item: string, i: number) => (
-                      <span key={i} className="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm font-medium border border-orange-100 shadow-sm">{item}</span>
+                      <span key={i} className="px-3 py-1 bg-orange-50 dark:bg-orange-950 text-orange-800 dark:text-orange-300 rounded-full text-sm font-medium border border-orange-100 dark:border-orange-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-slate-500 italic text-sm">No common allergens identified.</p>
+                  <p className="text-slate-500 dark:text-slate-400 italic text-sm">No common allergens identified.</p>
                 )}
               </div>
 

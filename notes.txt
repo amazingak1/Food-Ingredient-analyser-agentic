@@ -5,3 +5,4 @@
 - **API Key**: The Google Gemini API key is stored locally in `d:\aaaa\foodd\backend\.env`. It has quotes around it, which is parsed correctly by `python-dotenv`.
 - **404 error on `/`**: The FastAPI backend is meant for API requests only (`/api/analyze-ingredients`). Visiting `http://localhost:8000` via a browser will return a 404 or a routing message, which is totally normal. Always access the full UI via the frontend at `http://localhost:3000`.
 - **TextParticle**: The main header `Know what you eat.` uses a custom React `<TextParticle />` effect added to `frontend/src/components/ui/text-particle.tsx`. It relies on HTML5 Canvas and draws the text string using emerald-600 (`#059669`).
+- **Dark Mode**: Dark mode was implemented using `next-themes`. A `<ThemeProvider>` wraps the app in `layout.tsx` with `defaultTheme="dark"`. Tailwind `dark:` variants control the UI colors styling in `page.tsx`.
