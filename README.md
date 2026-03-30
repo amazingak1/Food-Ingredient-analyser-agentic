@@ -1,3 +1,7 @@
+# _Screenshot of working website_
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f0a721a1-d8c7-4a8d-ad83-dde1469b1ab7" />
+<img width="1522" height="1423" alt="image" src="https://github.com/user-attachments/assets/66f43955-82bc-42fc-9222-7b502d3a36f7" />
+<hr>
 # 🥗 Ingredient Health Analyzer
 
 Welcome to the **Ingredient Health Analyzer** project! 
