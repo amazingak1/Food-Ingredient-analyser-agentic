@@ -49,12 +49,15 @@ def analyze_image_with_gemini(image_data: bytes) -> dict:
         5. "health_score": A score from 0 to 100 based on how healthy the product is.
         6. "explanation": A short 2-3 sentence summary of why it got this score.
         
+        CRITICAL INSTRUCTION: If any ingredient (especially additives and colors) is listed as a code or number (e.g., E102, E211, Red 40, Yellow 5, etc.), you MUST include its common name or a very brief description in parentheses next to the code. 
+        Example: "E102 (Tartrazine - Yellow dye)", "E211 (Sodium Benzoate - Preservative)".
+
         Return ONLY a JSON response without any markdown code blocks matching exactly this structure below:
         {
           "health_score": 50,
           "healthy_ingredients": ["water", "salt"],
           "unhealthy_ingredients": ["sugar", "high fructose corn syrup"],
-          "food_colorings_additives": ["E129", "Red 40", "TBHQ"],
+          "food_colorings_additives": ["E102 (Tartrazine - Yellow dye)", "Red 40 (Allura Red)", "TBHQ (Antioxidant)"],
           "allergens": ["soy", "wheat"],
           "explanation": "..."
         }
