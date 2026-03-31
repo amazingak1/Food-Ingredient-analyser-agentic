@@ -216,17 +216,17 @@ export default function Home() {
             {/* ingredient grids */}
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               
-              {/* Healthy */}
+              {/* Safe */}
               <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-emerald-500">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="p-2 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-lg">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Good Ingredients</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Safe Ingredients</h4>
                 </div>
-                {result.healthy_ingredients?.length > 0 ? (
+                {result.safe_ingredients?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {result.healthy_ingredients.map((item: string, i: number) => (
+                    {result.safe_ingredients.map((item: string, i: number) => (
                       <span key={i} className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-full text-sm font-medium border border-emerald-100 dark:border-emerald-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
@@ -235,17 +235,36 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Unhealthy */}
+              {/* Moderate */}
+              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-amber-500">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-lg">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Moderate Ingredients</h4>
+                </div>
+                {result.moderate_ingredients?.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {result.moderate_ingredients.map((item: string, i: number) => (
+                      <span key={i} className="px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-full text-sm font-medium border border-amber-100 dark:border-amber-800/50 shadow-sm">{item}</span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-slate-500 dark:text-slate-400 italic text-sm">None detected.</p>
+                )}
+              </div>
+
+              {/* Risky */}
               <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg border-l-4 border-rose-500">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="p-2 bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-lg">
                     <AlertTriangle className="w-5 h-5" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Unhealthy Ingredients</h4>
+                  <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Risky Ingredients</h4>
                 </div>
-                {result.unhealthy_ingredients?.length > 0 ? (
+                {result.risky_ingredients?.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {result.unhealthy_ingredients.map((item: string, i: number) => (
+                    {result.risky_ingredients.map((item: string, i: number) => (
                       <span key={i} className="px-3 py-1 bg-rose-50 dark:bg-rose-950 text-rose-800 dark:text-rose-300 rounded-full text-sm font-medium border border-rose-100 dark:border-rose-800/50 shadow-sm">{item}</span>
                     ))}
                   </div>
@@ -263,9 +282,11 @@ export default function Home() {
                   <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100">Additives & Colors</h4>
                 </div>
                 {result.food_colorings_additives?.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-col gap-3">
                     {result.food_colorings_additives.map((item: string, i: number) => (
-                      <span key={i} className="px-3 py-1 bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-full text-sm font-medium border border-amber-100 dark:border-amber-800/50 shadow-sm">{item}</span>
+                      <div key={i} className="p-3 bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-100 rounded-xl text-sm border border-amber-100 dark:border-amber-800/50 shadow-sm whitespace-pre-line leading-relaxed">
+                        {item}
+                      </div>
                     ))}
                   </div>
                 ) : (

@@ -29,8 +29,9 @@ app.add_middleware(
 
 class AnalysisResponse(BaseModel):
     health_score: int
-    healthy_ingredients: List[str]
-    unhealthy_ingredients: List[str]
+    safe_ingredients: List[str]
+    moderate_ingredients: List[str]
+    risky_ingredients: List[str]
     food_colorings_additives: List[str]
     allergens: List[str]
     explanation: str
@@ -42,22 +43,33 @@ def analyze_image_with_gemini(image_data: bytes) -> dict:
         prompt = """
         Analyze this image of a food ingredient label. 
         Extract the ingredients and categorize them into:
-        1. "healthy_ingredients": Generally healthy or harmless ingredients.
-        2. "unhealthy_ingredients": Unhealthy ingredients like excess sugar, bad fats, etc.
-        3. "food_colorings_additives": Artificial colorings (like Red 40, E-numbers), preservatives, or weird chemicals.
-        4. "allergens": Common allergens found or mentioned.
-        5. "health_score": A score from 0 to 100 based on how healthy the product is.
-        6. "explanation": A short 2-3 sentence summary of why it got this score.
+        1. "safe_ingredients": Generally safe, unprocessed or minimally processed ingredients (e.g., whole foods, natural spices).
+        2. "moderate_ingredients": Moderately processed ingredients, or essentials like salt and wheat flour that are safe in moderation but can be harmful in high quantities (e.g. Iodised salt, Refined wheat flour).
+        3. "risky_ingredients": Highly processed ingredients, trans fats, excess added sugars, or harmful substances (e.g. Palm oil).
+        4. "food_colorings_additives": Additives, preservatives, colorings, INS/E-number codes.
+        5. "allergens": Common allergens found or mentioned.
+        6. "health_score": A score from 0 to 100 based on how healthy the product is.
+        7. "explanation": A short 2-3 sentence summary of why it got this score.
         
-        CRITICAL INSTRUCTION: If any ingredient (especially additives and colors) is listed as a code or number (e.g., E102, E211, Red 40, Yellow 5, etc.), you MUST include its common name or a very brief description in parentheses next to the code. 
-        Example: "E102 (Tartrazine - Yellow dye)", "E211 (Sodium Benzoate - Preservative)".
+        CRITICAL INSTRUCTION 1: Do NOT classify common ingredients (like salt, wheat flour, oil) as "unhealthy" by default. Use "moderate_ingredients" instead based on processing level and quantity assumptions. Avoid absolute labels like "bad" or "unhealthy".
+        
+        CRITICAL INSTRUCTION 2: For "food_colorings_additives", keep explanations very concise (max 1-2 lines per item). Format it exactly like this:
+        [Code or Name] ([Common Name]) → [Risk Level]
+        [6-12 word explanation of function and key health concern]
+
+        Example:
+        INS 508 (Potassium chloride) → Low risk
+        Salt substitute; excess may cause discomfort.
 
         Return ONLY a JSON response without any markdown code blocks matching exactly this structure below:
         {
           "health_score": 50,
-          "healthy_ingredients": ["water", "salt"],
-          "unhealthy_ingredients": ["sugar", "high fructose corn syrup"],
-          "food_colorings_additives": ["E102 (Tartrazine - Yellow dye)", "Red 40 (Allura Red)", "TBHQ (Antioxidant)"],
+          "safe_ingredients": ["water"],
+          "moderate_ingredients": ["Iodised salt", "Refined wheat flour"],
+          "risky_ingredients": ["high fructose corn syrup", "palm oil"],
+          "food_colorings_additives": [
+            "INS 508 (Potassium chloride) → Low risk\\nSalt substitute; excess may cause discomfort."
+          ],
           "allergens": ["soy", "wheat"],
           "explanation": "..."
         }
