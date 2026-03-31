@@ -2,13 +2,15 @@ import os
 print("--- [STARTING FASTAPI BACKEND] ---")
 import io
 import json
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from typing import List
+from typing import List, Optional
 from PIL import Image
+from datetime import datetime, timezone
+import motor.motor_asyncio
 
 load_dotenv()
 
@@ -19,6 +21,15 @@ if api_key:
 
 app = FastAPI(title="Ingredient Health Analyzer API")
 
+# Setup MongoDB
+MONGO_URI = os.getenv("MONGO_URI")
+if MONGO_URI:
+    client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
+    db = client.food_analyzer
+    scans_collection = db.scans
+else:
+    print("Warning: MONGO_URI not found. MongoDB integration disabled.")
+    scans_collection = None
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -90,7 +101,7 @@ def analyze_image_with_gemini(image_data: bytes) -> dict:
         raise ValueError(f"Failed to analyze image: {str(e)}")
 
 @app.post("/api/analyze-ingredients", response_model=AnalysisResponse)
-async def analyze_ingredients(file: UploadFile = File(...)):
+async def analyze_ingredients(file: UploadFile = File(...), item_name: Optional[str] = Form("Unknown Item")):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image")
         
@@ -109,9 +120,35 @@ async def analyze_ingredients(file: UploadFile = File(...)):
         
     try:
         result = analyze_image_with_gemini(clean_img_data)
+        
+        # Save to MongoDB
+        if scans_collection is not None:
+            scan_doc = {
+                "item_name": item_name,
+                "created_at": datetime.now(timezone.utc),
+                "result": result
+            }
+            await scans_collection.insert_one(scan_doc)
+            
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/history")
+async def get_history(limit: int = 20):
+    if scans_collection is None:
+        raise HTTPException(status_code=503, detail="MongoDB not configured")
+    
+    cursor = scans_collection.find().sort("created_at", -1).limit(limit)
+    documents = await cursor.to_list(length=limit)
+    
+    # Clean up fields for JSON serialization
+    for doc in documents:
+        doc["_id"] = str(doc["_id"])
+        if "created_at" in doc:
+            doc["created_at"] = doc["created_at"].isoformat()
+            
+    return {"history": documents}
 
 @app.get("/health")
 def health_check():

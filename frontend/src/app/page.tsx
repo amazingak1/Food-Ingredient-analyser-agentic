@@ -7,6 +7,7 @@ import { ParticleTextEffect } from "@/components/ui/interactive-text-particle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Home() {
+  const [itemName, setItemName] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,10 @@ export default function Home() {
 
   const analyzeImage = async () => {
     if (!file) return;
+    if (!itemName.trim()) {
+      setError("Please provide the name of the item first before analyzing.");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -40,6 +45,7 @@ export default function Home() {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("item_name", itemName);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -78,7 +84,12 @@ export default function Home() {
               HealthScan
             </span>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <a href="/history" className="px-5 py-2 font-medium text-sm rounded-full bg-slate-200/50 dark:bg-slate-800 hover:bg-emerald-100 hover:text-emerald-700 dark:hover:bg-emerald-900 dark:hover:text-emerald-300 transition-all font-semibold">
+              Scan History
+            </a>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -101,6 +112,22 @@ export default function Home() {
           <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto -mt-4">
             Upload a photo of an ingredient label. Our AI instantly analyzes it for healthy nutrients, harsh additives, and hidden allergens.
           </p>
+        </motion.div>
+
+        {/* Input Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl mx-auto mb-10"
+        >
+          <label className="block text-lg font-semibold mb-3 dark:text-slate-200">What item are you scanning?</label>
+          <input 
+            type="text" 
+            placeholder="e.g. Oreo Cookies, Heinz Tomato Ketchup..." 
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+            className="w-full px-6 py-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-400 text-lg shadow-sm placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
+          />
         </motion.div>
 
         {/* Upload Section */}
