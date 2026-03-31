@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UploadCloud, Camera, CheckCircle2, AlertTriangle, Salad, Pill, Activity, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ParticleTextEffect } from "@/components/ui/interactive-text-particle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Home() {
+  const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
   const [itemName, setItemName] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -14,6 +15,25 @@ export default function Home() {
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const res = await fetch(`${apiUrl}/health`);
+        if (res.ok) {
+          setBackendStatus("online");
+        } else {
+          setBackendStatus("offline");
+        }
+      } catch (err) {
+        setBackendStatus("offline");
+      }
+    };
+    checkBackend();
+    const interval = setInterval(checkBackend, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -85,6 +105,25 @@ export default function Home() {
             </span>
           </div>
           <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/80 text-xs font-medium border border-slate-200 dark:border-slate-700/50">
+              <span className="relative flex h-2.5 w-2.5">
+                {backendStatus === "online" && (
+                  <>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                  </>
+                )}
+                {backendStatus === "offline" && (
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                )}
+                {backendStatus === "checking" && (
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500 animate-pulse"></span>
+                )}
+              </span>
+              <span className="text-slate-600 dark:text-slate-400">
+                {backendStatus === "online" ? "System Online" : backendStatus === "offline" ? "Backend Offline" : "Checking..."}
+              </span>
+            </div>
             <a href="/history" className="px-5 py-2 font-medium text-sm rounded-full bg-slate-200/50 dark:bg-slate-800 hover:bg-emerald-100 hover:text-emerald-700 dark:hover:bg-emerald-900 dark:hover:text-emerald-300 transition-all font-semibold">
               Scan History
             </a>
