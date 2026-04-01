@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ParticleTextEffect } from "@/components/ui/interactive-text-particle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { RainbowButton } from "@/components/ui/rainbow-borders-button";
+import { ShineBorder } from "@/components/ui/shine-border";
 
 export default function Home() {
   const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
@@ -181,11 +182,12 @@ export default function Home() {
               className="relative max-w-2xl mx-auto rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl shadow-emerald-900/5 dark:shadow-none overflow-hidden transition-all hover:border-emerald-500 hover:shadow-emerald-900/10 cursor-pointer"
               onClick={() => fileInputRef.current?.click()}
             >
-              <div className="px-8 py-16 flex flex-col items-center justify-center text-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center">
+              <ShineBorder shineColor={["#10b981", "#3b82f6"]} borderWidth={2} />
+              <div className="px-8 py-16 flex flex-col items-center justify-center text-center gap-4 relative z-10">
+                <div className="w-20 h-20 rounded-full bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center relative z-10">
                   <UploadCloud className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <div>
+                <div className="relative z-10">
                   <h3 className="text-xl font-semibold dark:text-slate-200">Upload your label</h3>
                   <p className="text-slate-500 dark:text-slate-400 mt-2">Click or drag an image here. JPG, PNG supported.</p>
                 </div>
