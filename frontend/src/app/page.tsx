@@ -5,6 +5,7 @@ import { UploadCloud, Camera, CheckCircle2, AlertTriangle, Salad, Pill, Activity
 import { motion, AnimatePresence } from "framer-motion";
 import { ParticleTextEffect } from "@/components/ui/interactive-text-particle";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { RainbowButton } from "@/components/ui/rainbow-borders-button";
 
 export default function Home() {
   const [backendStatus, setBackendStatus] = useState<"checking" | "online" | "offline">("checking");
@@ -216,26 +217,23 @@ export default function Home() {
 
               {!result && (
                 <div className="flex justify-center">
-                  <button 
+                  <RainbowButton 
                     onClick={analyzeImage}
                     disabled={loading}
-                    className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-bold text-white bg-slate-900 dark:bg-slate-800 rounded-full overflow-hidden transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
+                    className="group dark:bg-slate-800"
                   >
-                    <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <span className="relative flex items-center gap-2">
-                       {loading ? (
-                         <>
-                           <Activity className="w-5 h-5 animate-pulse" />
-                           Analyzing...
-                         </>
-                       ) : (
-                         <>
-                           <CheckCircle2 className="w-5 h-5" />
-                           Analyze Ingredients
-                         </>
-                       )}
-                    </span>
-                  </button>
+                    {loading ? (
+                      <>
+                        <Activity className="w-5 h-5 animate-pulse" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-5 h-5" />
+                        Analyze Ingredients
+                      </>
+                    )}
+                  </RainbowButton>
                 </div>
               )}
             </motion.div>
