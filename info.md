@@ -168,7 +168,7 @@ Each scan document contains:
 
 | Aspect | Details |
 |---|---|
-| **Backend hosting** | Configured for **Render** (or Heroku) via `Procfile` and `runtime.txt` |
+| **Backend hosting** | Configured for **Render**  via `Procfile` and `runtime.txt` |
 | **Frontend hosting** | Deployable to **Vercel** (native Next.js support) |
 | **Environment variables** | `GEMINI_API_KEY` and `MONGO_URI` stored in `.env` |
 | **CORS** | Backend allows all origins (`*`) for cross-origin frontend requests |
