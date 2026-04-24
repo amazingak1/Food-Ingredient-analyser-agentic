@@ -29,6 +29,20 @@ This is a **decoupled fullstack application** with two independent services:
 
 ---
 
+## 📋 Prerequisites
+
+Before running this project, make sure you have the following installed:
+
+| Tool | Version | Download |
+|---|---|---|
+| **Node.js** | 18+ (LTS recommended) | [nodejs.org](https://nodejs.org) |
+| **Python** | 3.11 | [python.org](https://www.python.org/downloads/) |
+| **MongoDB** | Atlas (cloud) or local | [mongodb.com/atlas](https://www.mongodb.com/atlas) |
+| **Git** | latest | [git-scm.com](https://git-scm.com/) |
+| **Google Gemini API Key** | — | [aistudio.google.com](https://aistudio.google.com/apikey) |
+
+---
+
 ## ⚙️ Backend — Technologies
 
 | Technology | Version | Purpose |
@@ -58,8 +72,9 @@ backend/
 
 | Method | Route | Description |
 |---|---|---|
+| `GET` | `/` | Welcome message with link to the frontend |
 | `POST` | `/api/analyze-ingredients` | Accepts an image file + item name, returns AI-classified ingredient analysis |
-| `GET` | `/api/history` | Returns the last 20 scans from MongoDB |
+| `GET` | `/api/history?limit=N` | Returns the last N scans from MongoDB (default: 20) |
 | `GET` | `/health` | Health-check endpoint for monitoring |
 
 ---
@@ -172,6 +187,66 @@ Each scan document contains:
 | **Frontend hosting** | Deployable to **Vercel** (native Next.js support) |
 | **Environment variables** | `GEMINI_API_KEY` and `MONGO_URI` stored in `.env` |
 | **CORS** | Backend allows all origins (`*`) for cross-origin frontend requests |
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file inside the `backend/` directory with the following variables:
+
+| Variable | Required | Description |
+|---|---|---|
+| `GEMINI_API_KEY` | ✅ Yes | Your Google Gemini API key for AI-powered ingredient analysis |
+| `MONGO_URI` | ✅ Yes | MongoDB connection string (Atlas URI or local `mongodb://localhost:27017`) |
+
+```env
+# backend/.env
+GEMINI_API_KEY="your-gemini-api-key-here"
+MONGO_URI="mongodb+srv://user:password@cluster.mongodb.net/?appName=YourApp"
+```
+
+> ⚠️ **Never commit your `.env` file to version control.** Make sure it's listed in `.gitignore`.
+
+---
+
+## 🏃 How to Run Locally
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/amazingak1/Food-Ingredient-analyser-agentic.git
+cd Food-Ingredient-analyser-agentic
+```
+
+### 2. Start the Backend
+```bash
+cd backend
+python -m venv venv
+
+# Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+# source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+Create a `.env` file (see [Environment Variables](#-environment-variables) above), then:
+```bash
+uvicorn main:app --reload
+```
+Backend will be live at **http://localhost:8000**
+
+### 3. Start the Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend will be live at **http://localhost:3000**
+
+### 4. Use the App
+Open **http://localhost:3000** in your browser, upload a food ingredient label image, and get instant AI analysis!
 
 ---
 
