@@ -103,7 +103,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Salad className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-800 dark:from-emerald-400 dark:to-teal-500">
-              HealthScan
+              Food Ingredient Analyser
             </span>
           </div>
           <div className="flex items-center gap-4">
